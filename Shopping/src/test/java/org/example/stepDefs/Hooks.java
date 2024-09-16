@@ -15,17 +15,18 @@ public class Hooks
     public static WebDriver driver;
     @Before
     public static void beforeTest() throws InterruptedException {
-        ChromeOptions option = new ChromeOptions();
-        option.addExtensions(new File("src/main/resources/GIGHMMPIOBKLFEPJOCNAMGKKBIGLIDOM_6_9_0_0.crx"));
-        driver = new ChromeDriver(option);
+//        ChromeOptions option = new ChromeOptions();
+//        option.addExtensions(new File("src/main/resources/GIGHMMPIOBKLFEPJOCNAMGKKBIGLIDOM_6_9_0_0.crx"));
+//        driver = new ChromeDriver(option);
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        Thread.sleep(7000);
+//        Thread.sleep(7000);
         driver.get("https://www.ikea.com/eg/en/");
-        ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
-        driver.switchTo().window(tabs.get(1));
-        driver.close();
-        driver.switchTo().window(tabs.get(0));
+//        ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+//        driver.switchTo().window(tabs.get(1));
+//        driver.close();
+//        driver.switchTo().window(tabs.get(0));
 //        driver = new ChromeDriver();
 //        driver.manage().window().maximize();
 //        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
