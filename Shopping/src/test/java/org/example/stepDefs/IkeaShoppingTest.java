@@ -6,14 +6,19 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.example.pages.IkeaShoppingPage;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.v85.page.Page;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.asserts.SoftAssert;
+
+import java.util.Random;
 
 import static org.example.stepDefs.Hooks.driver;
 
 public class IkeaShoppingTest
 {
     IkeaShoppingPage page = new IkeaShoppingPage();
+    int totalPrice;
 
     @Given("Open the Ikea website")
     public void openWebsite()
@@ -66,10 +71,11 @@ public class IkeaShoppingTest
     }
 
     @And("Sort products from high to low")
-    public void sortProductsFrom() throws InterruptedException {
+    public void sortProductsFrom() throws InterruptedException
+    {
         SoftAssert soft = new SoftAssert();
 //        page.sort.click();
-        Thread.sleep(3000);
+        Thread.sleep(5000);
         page.highToLow.click();
         soft.assertAll();
     }
@@ -77,36 +83,71 @@ public class IkeaShoppingTest
     @And("Add three random products to the cart")
     public void addRandomProductsToTheCart()
     {
-
+        SoftAssert soft = new SoftAssert();
+        int flag=0;
+        while (flag<3)
+        {
+            Random random = new Random();
+            int randomIndex = random.nextInt(24);
+            WebElement randomProduct = page.addProduct.get(randomIndex);
+            randomProduct.click();
+            flag++;
+        }
+        soft.assertAll();
     }
 
     @Then("Compare every product in the cart with product details")
     public void compareEveryProductInTheCartWithProductDetails()
     {
-
+        SoftAssert soft = new SoftAssert();
+        for(int i=0 ;i<3 ;i++)
+        {
+            soft.assertEquals(page.nameProduct.get(i).getText(),page.productNameDetalis.getText());
+            soft.assertEquals(page.priceProduct.get(i).getText(),page.productPriceDetalis.getText());
+            totalPrice = Integer.parseInt(page.priceProduct.get(i).getText());
+        }
+        soft.assertAll();
     }
 
     @And("Check total price in the cart is calculated correctly")
     public void checkTotalPriceInTheCartIsCalculatedCorrectly()
     {
-
+        SoftAssert soft = new SoftAssert();
+        int price = Integer.parseInt(page.totalPrice.getText());
+        soft.assertEquals(price,totalPrice);
+        soft.assertAll();
     }
 
     @When("Move the second product in the cart to favourites")
     public void moveTheSecondProductInTheCartToFavourites()
     {
-
+        page.moveSecondFavorite.click();
     }
 
     @And("Remove the third product from the cart")
     public void removeTheThirdProductFromTheCart()
     {
-
+        page.removeThirdProduct.click();
     }
 
     @Then("proceed to checkout with fake data until I reach Review and Pay")
     public void proceedToCheckoutWithFakeDataUntilIReachReviewAndPay()
     {
-
+        SoftAssert soft = new SoftAssert();
+        page.checkOut.click();
+        Faker fake = new Faker();
+        page.fullName.sendKeys(fake.name().fullName());
+        Select Governorate = new Select(page.Governorate);
+        Governorate.selectByVisibleText("Giza");
+        Select Aria = new Select (page.Aria);
+        Aria.selectByVisibleText("Giza");
+        page.emailAddress.sendKeys(fake.internet().safeEmailAddress());
+        page.phoneNumber.sendKeys(fake.phoneNumber().phoneNumber());
+        page.address.sendKeys(fake.address().fullAddress());
+        page.buildingName.sendKeys(fake.address().buildingNumber());
+        page.countinue1.click();
+        page.countinue2.click();
+        soft.assertAll();
     }
+
 }
